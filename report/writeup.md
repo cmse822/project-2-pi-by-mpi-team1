@@ -11,25 +11,28 @@
 
 
 ## Part 3: MPI Basics
+### Q3
+Running the command `mpiexec -n 4 ./a.out` after compiling the given `hello.cpp` source file, we got "Hello, World!" printed for four times.  Because we specified numoftasks=4, on four processors, each of them executed the file `a.out` once, as a displaying result, we got "Hello, World!" printed for four times.  
 
-The `hello.cpp` program will print "Hello, World!" once. The modified output result is as follows, with the specific code stored in `hello_mpi.cpp`.
+### Q4  
+We added the commands `MPI_Init` and `MPI_Finalize`, and put three different statements in the code, the new source file is named as `hello_mpi.cpp`. We recompiled and ran command `mpiexec -n 4 ./a.out`, output results and explanations are as follows.
 
-### Before the 'init'
-- **Output:**
+<u>**Before 'MPI_Init()'**</u>
 
+*Output:*  
 <blockquote>
   Before the 'init': Hello, World! <br>
   Before the 'init': Hello, World! <br>
   Before the 'init': Hello, World! <br>
   Before the 'init': Hello, World!
-</blockquote>
+</blockquote>  
 
-- **Explain:** \
-  Before executing `MPI_Init`, the four processes are running independently. Therefore, the print instruction is executed once by each process independently.
+*Explaination:*   
+  Before executing `MPI_Init`, the four processors are running independently. Therefore, the print code  (`cout`) is executed independently by each processor once.
 
-### Between the 'init' and 'finalize'
-- **Output:**
+<u>**Between 'MPI_Init()' and 'MPI_Finalize()'**</u>
 
+*Output:*
 <blockquote>
   Between the 'init' and 'finalize': Hello, World! <br>
   Rank: 2. Size: 4 <br>
@@ -41,12 +44,12 @@ The `hello.cpp` program will print "Hello, World!" once. The modified output res
   Rank: 3. Size: 4
 </blockquote>
 
-- **Explain:** \
-  After completing MPI initialization, each process has its own rank for identification. Although each process runs the print instruction once again, their operations are no longer independent of each other; they can cooperate in parallel computation.
+*Explaination:*  
+  Once we initialize MPI, each processor has its own rank for identification(i.e. task ID). Although each processor executes the print code once again, their operations are no longer independent of each other, instead, they can communicate with each other and cooperate in parallel computation.   
 
-### After the 'finalize'
-- **Output:**
+<u>**After 'MPI_Finalize()'**</u>  
 
+*Output:*
 <blockquote>
   After the 'finalize': Hello, World!  <br>
   After the 'finalize': Hello, World!  <br>
@@ -54,20 +57,25 @@ The `hello.cpp` program will print "Hello, World!" once. The modified output res
   After the 'finalize': Hello, World!
 </blockquote>
 
-- **Explain:** \
-  After executing `MPI_Finalize`, the MPI task is complete, and the four processes return to an independent state. Therefore, the print instruction is executed once again by each process independently.
+*Explaination:*  
+  Once we terminate the MPI execution environment using `MPI_Finalize()`, the four processors return to an independent state. Therefore, the print code is executed once again by each processor independently.
 
-### Exercise 2.3. Assume that an addition takes a certain unit time, and that moving a number from one processor to another takes that same unit time. Show that the communication time equals the computation time. Now assume that sending a number from processor p to p ± k takes time k. Show that the execution time of the parallel algorithm now is of the same order as the sequential time.
+### Q5  Complete Exercises 2.3, 2.4, and 2.5 in the Parallel Programing book.  
 
+#### Exercise 2.3.  
+*Assume that an addition takes a certain unit time, and that moving a number from one processor to another takes that same unit time. Show that the communication time equals the computation time. Now assume that sending a number from processor p to p ± k takes time k. Show that the execution time of the parallel algorithm now is of the same order as the sequential time.*  
+**Answer:**  
 Assuming there are n processors tasked with performing n operations. Based on the commmunication structure of parallel vector reduction, these operations will undergo $log_2(n)$ iterations to complete the computation. In each iteration, one unit time is allocated for communication, culminating in a total of $log_2(n)$ unit times. Consequently, both the computation and communication times are quantified as $log_2(n)$.
 
 If we assume sending a number from processor p to p ± k takes time k, the communication time will be doubled in each iteration, i.e. the communication time is $n-1$. The execution time is $n-1+log_2(n)$. For large values of n, this sum closely approximates $n-1$. In comparison, the execution time for sequential computing also stands at $n-1$. Thus, those two algorithms shows the same execution time.
 
-### Exercise 2.4. Consider the case of summing 8 elements with 4 processors. Show that some of the edges in the graph of figure 2.3 no longer correspond to actual communications. Now consider summing 16 elements with, again, 4 processors. What is the number of communication edges this time?
-
+#### Exercise 2.4. 
+*Consider the case of summing 8 elements with 4 processors. Show that some of the edges in the graph of figure 2.3 no longer correspond to actual communications. Now consider summing 16 elements with, again, 4 processors. What is the number of communication edges this time?*    
+**Answer:**  
 In both scenarios described, the number of communication edges remains at 3. The number of communication edges is determined by the number of processors engaged in parrallel computing, not by the total number of elements.
 
-### Exercise 2.5. Answer the following questions about the double i,j loop:
+#### Exercise 2.5. 
+*Answer the following questions about the double i,j loop:*  
 <blockquote>
 for i in [1:N]: <br>
 &nbsp&nbsp&nbsp&nbsp x[0,i] = some_function_of(i) <br>
