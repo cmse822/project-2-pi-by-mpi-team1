@@ -98,7 +98,7 @@ Given `x[2,1] = x[1,1] + x[2,0]` and `x[1,2] = x[1,1] + x[0,2]`, knowning the va
 #### 4. Does this give you an idea for a parallelization strategy?
 Yes. By first obtaining all the boundary value, x[i,1] and x[1,j], and initiating the computation from the diagonal elements, the computation task can be divided into two independent parts. This division allows for the utilization of multiple processors to compute simultaneously following the progression of diagonal value computation.
 
-<img src="Q254.png" alt="error" width="900"/>   
+<img src="Q254.png" alt="error" width="250"/>   
 
 
 ## Part 4: Eat Some Pi
