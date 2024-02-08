@@ -25,20 +25,30 @@ int main(int argc, char *argv[])
 	double receive_pi;
 	int i, n;
 	int tasks, rank;
+	int seed;
+	double darts;
+	int darts_per_rank, darts_per_round;
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &tasks);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	
+	if (argc < 3 && rank == 0) {
+		perror("Arguments: pi seed num_samples");
+	}
 
-	printf("Starting pi calculation using dartboard algorithm on rank %d of %d...\n", rank, tasks);
-	srandom (5);            /* seed the random number generator */
+	seed = atoi(argv[1]);
+	darts = atof(argv[2]);
+	darts_per_rank = (int)(darts / (float)tasks);
+	darts_per_round = darts_per_rank / ROUNDS;
+
+	srandom (seed + rank);            /* seed the random number generator */
 	avepi = 0;
 	for (i = 0; i < ROUNDS; i++) {
 	   /* Perform pi calculation on serial processor */
-	   pi = dboard(DARTS);
+	   pi = dboard(darts_per_round);
 	   avepi = ((avepi * i) + pi)/(i + 1); 
-	   printf("   After %3d throws, average value of pi = %10.8f\n",
-			 (DARTS * (i + 1)),avepi);
+	   //printf("   After %3d throws, average value of pi = %10.8f\n", (DARTS * (i + 1)),avepi);
 	}    
 	MPI_Barrier(MPI_COMM_WORLD);
 
