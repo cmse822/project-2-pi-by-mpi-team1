@@ -5,9 +5,36 @@
 
 
 ## Part 1 :  Warm-up
+### Exercise 2.18
 
- 
 
+Explain the problem with the following code:
+```c
+// serial initialization
+for (i=0; i<N; i++)
+a[i] = 0.;
+
+#pragma omp parallel for
+for (i=0; i<N; i++)
+a[i] = b[i] + c[i];
+```
+
+- **Explain:** \
+  The first loop is serial and it initializes the array a to 0. This means that the initialization of the entire array a is done by a single thread (usually the main thread of the program). And the second loop is parallel, different threads will calculate different parts of the array a. According to the first-touch strategy.
+
+  The actual allocation of array a in memory is done when it is accessed for the first time, when other threads in the parallel loop access a, they might face higher latency if they are on different cores, leading to reduced parallel efficiency.
+
+
+ improved code:
+```c
+#pragma omp parallel for
+for (i = 0; i < N; i++)
+    a[i] = 0.;
+
+#pragma omp parallel for
+for (i = 0; i < N; i++)
+    a[i] = b[i] + c[i];
+```
 ## Part 3: MPI Basics
 
 The `hello.cpp` program will print "Hello, World!" once. The modified output result is as follows, with the specific code stored in `hello_mpi.cpp`.
