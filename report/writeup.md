@@ -20,9 +20,9 @@ a[i] = b[i] + c[i];
 ```
 
 - **Explain:** \
-  The first loop is serial and it initializes the array a to 0. This means that the initialization of the entire array a is done by a single thread. And the second loop is parallel, different threads will calculate different parts of the array a. According to the first-touch strategy.
+  The first loop is serial and it initializes the array a to 0. This means that the initialization of the entire array a is done by a single thread. And the second loop is parallel, different threads will calculate different parts of the array a.
 
-  The actual allocation of array a in memory is done when it is accessed for the first time, when other threads in the parallel loop access a, they might face higher latency if they are on different cores, leading to reduced parallel efficiency.
+  According to the first-touch strategy, the actual allocation of array a in memory is done when it is accessed for the first time, when other threads in the parallel loop access a, they might face higher latency if they are on different cores, leading to reduced parallel efficiency.
 
 
  improved code:
