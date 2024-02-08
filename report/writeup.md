@@ -20,7 +20,7 @@ a[i] = b[i] + c[i];
 ```
 
 - **Explain:** \
-  The first loop is serial and it initializes the array a to 0. This means that the initialization of the entire array a is done by a single thread (usually the main thread of the program). And the second loop is parallel, different threads will calculate different parts of the array a. According to the first-touch strategy.
+  The first loop is serial and it initializes the array a to 0. This means that the initialization of the entire array a is done by a single thread. And the second loop is parallel, different threads will calculate different parts of the array a. According to the first-touch strategy.
 
   The actual allocation of array a in memory is done when it is accessed for the first time, when other threads in the parallel loop access a, they might face higher latency if they are on different cores, leading to reduced parallel efficiency.
 
@@ -35,6 +35,19 @@ for (i = 0; i < N; i++)
 for (i = 0; i < N; i++)
     a[i] = b[i] + c[i];
 ```
+
+
+### Exercise 2.19. Let’s say there are t threads, and your code looks like
+```c
+for (i=0; i<N; i++) {
+a[i] = // some calculation
+}
+```
+If you specify a chunksize of 1, iterations 0, t, 2t, . . . go to the first thread, 1, 1 + t, 1 +
+2t, . . . to the second, et cetera. Discuss why this is a bad strategy from a performance
+point of view. Hint: look up the definition of false sharing. What would be a good
+chunksize?
+
 ## Part 3: MPI Basics
 
 The `hello.cpp` program will print "Hello, World!" once. The modified output result is as follows, with the specific code stored in `hello_mpi.cpp`.
