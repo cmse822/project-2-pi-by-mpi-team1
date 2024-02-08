@@ -1,0 +1,5 @@
+pi
+mpi_hello
+*.o
+*.sb
+*.slurm
