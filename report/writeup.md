@@ -49,8 +49,27 @@ If you specify a chunksize of 1, iterations 0, t, 2t, . . . go to the first thre
 point of view. Hint: look up the definition of false sharing. What would be a good
 chunksize?
 
+<be>
 
+### Extreme Cases
+1. **Computation Time is Zero**: In this case, the entire runtime is dominated by communication. Overlapping cannot provide any benefit because there's no computation to overlap with communication. The potential gain from overlapping in this scenario is zero.
 
+2. **Communication Time is Zero**: Here, the runtime is solely determined by computation. Since communication doesn't contribute to the runtime, overlapping is irrelevant. The gain from overlapping is also zero because there's no communication time to hide.
+
+### General Case
+The potential gain from overlapping depends on the relative amounts of time spent on communication and computation. Now, given...
+- \(T_{comp}\) as the time taken for computation,
+- \(T_{comm}\) as the time taken for communication.
+
+#### Without Overlapping
+The total time \(T_{total}\) will be \[T_{total} = T_{comp} + T_{comm}\]
+
+#### With Overlapping
+In this case, the total time \(T'_{total}\) is the maximum of the two times \[T'_{total} = \max(T_{comp}, T_{comm})\]
+
+The potential gain from overlapping in this case is \[Gain = T_{total} - T'_{total}\]
+
+This gain is maximized when computation and communication times are similar, allowing for parts of communication to be hidden behind computation. In contrast, the gain diminishes as the imbalance between \(T_{comp}\) and \(T_{comm}\) increases, especially when one significantly outweighs the other.
 <br>
 
 ## Part 3: MPI Basics
