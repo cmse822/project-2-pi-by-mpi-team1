@@ -57,7 +57,25 @@ int rank, size;
 MPI_Init(&argc, &argv);
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &size);
-...
+
+double send_buf = x[rank]; // Prepare the send buffer with the current process's x value (assuming x is already initialized)
+double recv_buf; // Receive buffer for x_{i-1} or x_{n-1} for rank 0
+
+int prev_rank = (rank == 0) ? size - 1 : rank - 1;
+int next_rank = (rank + 1) % size;
+
+MPI_Request send_request, recv_request; // Start non-blocking receive from the previous process
+MPI_Irecv(&recv_buf, 1, MPI_DOUBLE, prev_rank, 0, MPI_COMM_WORLD, &recv_request); // Start non-blocking send to the next process
+MPI_Isend(&send_buf, 1, MPI_DOUBLE, next_rank, 0, MPI_COMM_WORLD, &send_request);
+
+// Ensure the receive has completed before updating y (assuming x is already initialized)
+MPI_Wait(&recv_request, MPI_STATUS_IGNORE);
+y[rank] += recv_buf; // Update y_i with received value
+
+// Wait for the send to complete before proceeding 
+MPI_Wait(&send_request, MPI_STATUS_IGNORE);
+
+MPI_Finalize();
 ```
 #### Disadvantage of Non-blocking over Blocking 
 The main disadvantage in this context is the increased complexity of the code. With non-blocking communication, we must explicitly manage the timing of communications and computations to ensure that data dependencies are respected without leading to deadlocks or race conditions. This complexity includes managing communication handles and ensuring that MPI_Wait (or other synchronization operations) is called at the correct times to guarantee that data has been properly sent and received before it is used. Additionally, non-blocking communication requires careful consideration of the workload and communication patterns to achieve the overlapping communication overlap effectively. If not properly managed the program could spend time waiting for communications to complete.
