@@ -59,6 +59,8 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &size);
 ...
 ```
+#### Disadvantage of Non-blocking over Blocking 
+The main disadvantage in this context is the increased complexity of the code. With non-blocking communication, we must explicitly manage the timing of communications and computations to ensure that data dependencies are respected without leading to deadlocks or race conditions. This complexity includes managing communication handles and ensuring that MPI_Wait (or other synchronization operations) is called at the correct times to guarantee that data has been properly sent and received before it is used. Additionally, non-blocking communication requires careful consideration of the workload and communication patterns to achieve the overlapping communication overlap effectively. If not properly managed the program could spend time waiting for communications to complete.
 
 ### Exercise 2.23
 #### Purely Distributed Model
