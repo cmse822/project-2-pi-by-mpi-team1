@@ -7,7 +7,7 @@
 ## Part 1 :  Warm-up  
 Exercise 2.18, 2.19, 2.21, 2.22, 2.23, 2.27 from HPSC textbook.  
 
-#### Exercise 2.18
+### Exercise 2.18
 
 Explain the problem with the following code:
 ```c
@@ -38,7 +38,7 @@ for (i = 0; i < N; i++)
 ```
 
 
-#### Exercise 2.19 Let’s say there are t threads, and your code looks like
+### Exercise 2.19 Let’s say there are t threads, and your code looks like
 ```c
 for (i=0; i<N; i++) {
 a[i] = // some calculation
@@ -51,7 +51,7 @@ chunksize?
 
 <be>
 
-#### Exercise 2.27
+### Exercise 2.27
 #### Extreme Cases
 1. **Computation Time is Zero**: In this case, the entire runtime is dominated by communication. Overlapping cannot provide any benefit because there's no computation to overlap with communication. The potential gain from overlapping in this scenario is zero.
 
