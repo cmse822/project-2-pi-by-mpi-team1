@@ -51,6 +51,15 @@ chunksize?
 
 <be>
 
+### Exercise 2.22
+```
+int rank, size;
+MPI_Init(&argc, &argv);
+MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+...
+```
+
 ### Exercise 2.23
 #### Purely Distributed Model
 In a purely distributed model with MPI processes on each core, communication between nodes is handled through explicit message passing. If two MPI processes on one node need to send messages to two processes on another node, there would be four individual messages. 
