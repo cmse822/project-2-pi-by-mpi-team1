@@ -51,6 +51,25 @@ chunksize?
 
 <be>
 
+### Exercise 2.23
+#### Purely Distributed Model
+In a purely distributed model with MPI processes on each core, communication between nodes is handled through explicit message passing. If two MPI processes on one node need to send messages to two processes on another node, there would be four individual messages. 
+Let's assume...
+- Latency per message is \(L\),
+- Bandwidth is \(B\),
+- And the size of each message is \(S\).
+Then the time to send a message wuld be \[T_{message} = L + \frac{S}{B}\], which for four messages, the total cost would be \[T_{total} = 4 \times (L + \frac{S}{B})\]
+
+#### Hybrid Model
+In the hybrid model, where OpenMP is used for intra-node communication and MPI for inter-node, messages that are sent from one node to processes on another node can be bundled together, which can reduce the number of messages to one bundled message instead of four, assuming an optimal scenario where all data can be bundled into a single message of size \(4xS\). In this case, the time to send this bundled message would be \[T_{total, hybrid} = L + \frac{4S}{B}\]
+
+#### Cost Savings Analysis
+The difference in total time between the purely distributed and hybrid models is:
+\[T_{savings} = T_{total, distributed} - T_{total, hybrid}\]
+\[T_{savings} = 4L + \frac{4S}{B} - (L + \frac{4S}{B})\]
+\[T_{savings} = 3L\]
+
+<br>
 ### Exercise 2.27
 #### Extreme Cases
 1. **Computation Time is Zero**: In this case, the entire runtime is dominated by communication. Overlapping cannot provide any benefit because there's no computation to overlap with communication. The potential gain from overlapping in this scenario is zero.
