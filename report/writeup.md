@@ -78,18 +78,18 @@ $$T_{savings} = 3L$$
 
 #### General Case
 The potential gain from overlapping depends on the relative amounts of time spent on communication and computation. Now, given...
-- T_{comp} as the time taken for computation,
-- T_{comm} as the time taken for communication.
+- $T_{comp}$ as the time taken for computation,
+- $T_{comm}$ as the time taken for communication.
 
 #### Without Overlapping
-The total time T_{total} will be T_{total} = T_{comp} + T_{comm}
+The total time $T_{total}$ will be $$T_{total} = T_{comp} + T_{comm}$$
 
 #### With Overlapping
-In this case, the total time T'_{total} is the maximum of the two times T'_{total} = \max(T_{comp}, T_{comm})
+In this case, the total time $T'_{total}$ is the maximum of the two times $$T'_{total} = \max(T_{comp}, T_{comm})$$
 
-The potential gain from overlapping in this case is Gain = T_{total} - T'_{total}
+The potential gain from overlapping in this case is $$\text{Gain} = T_{total} - T'_{total}$$
 
-This gain is maximized when computation and communication times are similar, allowing for parts of communication to be hidden behind computation. In contrast, the gain diminishes as the imbalance between T_{comp} and T_{comm} increases, especially when one significantly outweighs the other.
+This gain is maximized when computation and communication times are similar, allowing for parts of communication to be hidden behind computation. In contrast, the gain diminishes as the imbalance between $T_{comp}$ and $T_{comm}$ increases, especially when one significantly outweighs the other.
 
 ## Part 3: MPI Basics
 
