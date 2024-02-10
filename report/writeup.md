@@ -69,7 +69,6 @@ The difference in total time between the purely distributed and hybrid models is
 \[T_{savings} = 4L + \frac{4S}{B} - (L + \frac{4S}{B})\]
 \[T_{savings} = 3L\]
 
-<br>
 ### Exercise 2.27
 #### Extreme Cases
 1. **Computation Time is Zero**: In this case, the entire runtime is dominated by communication. Overlapping cannot provide any benefit because there's no computation to overlap with communication. The potential gain from overlapping in this scenario is zero.
@@ -90,7 +89,6 @@ In this case, the total time T'_{total} is the maximum of the two times T'_{tota
 The potential gain from overlapping in this case is Gain = T_{total} - T'_{total}
 
 This gain is maximized when computation and communication times are similar, allowing for parts of communication to be hidden behind computation. In contrast, the gain diminishes as the imbalance between T_{comp} and T_{comm} increases, especially when one significantly outweighs the other.
-<br>
 
 ## Part 3: MPI Basics
 
