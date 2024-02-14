@@ -1,7 +1,5 @@
 pi
 mpi_hello
 *.o
-*.sb
-*.slurm
 *.out
 *.err
