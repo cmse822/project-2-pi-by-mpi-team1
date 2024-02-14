@@ -33,8 +33,9 @@ int main(int argc, char *argv[])
 	MPI_Comm_size(MPI_COMM_WORLD, &tasks);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	
-	if (argc < 3 && rank == 0) {
-		perror("Arguments: pi seed num_samples");
+	if (argc < 3) {
+		if (rank == 0) perror("Arguments: pi seed num_samples\n");
+		return -1;
 	}
 
 	seed = atoi(argv[1]);
