@@ -43,8 +43,6 @@ Using a chunksize of 1 leads to poor performance primarily due to false sharing.
 
 ### Exercise 2.21
 ```
-MPI_Init(&argc, &argv);
-
 int myTaskID, nTasks;
 MPI_Comm_rank(MPI_COMM_WORLD, &myTaskID);
 MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
