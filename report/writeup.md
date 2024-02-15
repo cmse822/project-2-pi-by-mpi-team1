@@ -38,18 +38,8 @@ for (i = 0; i < N; i++)
 ```
 
 
-### Exercise 2.19 Let’s say there are t threads, and your code looks like
-```c
-for (i=0; i<N; i++) {
-a[i] = // some calculation
-}
-```
-If you specify a chunksize of 1, iterations 0, t, 2t, . . . go to the first thread, 1, 1 + t, 1 +
-2t, . . . to the second, et cetera. Discuss why this is a bad strategy from a performance
-point of view. Hint: look up the definition of false sharing. What would be a good
-chunksize?
-
-<be>
+### Exercise 2.19 
+Using a chunksize of 1 leads to poor performance primarily due to false sharing. This occurs because threads frequently update adjacent memory locations (elements in the array `a[i]`), which are likely to be on the same cache line (typically 64 bytes). When multiple threads update different variables on the same cache line, it causes the cache line to be invalidated and transferred among the cores, leading to significant performance penalties. A better chunksize would be larger, potentially aligned with the size of a cache line or sufficiently large to minimize the overhead of thread management and reduce the risk of false sharing. Not specifying a chunksize and letting OpenMP manage the distribution can also be effective, as OpenMP might balance the workload across threads more efficiently.
 
 ### Exercise 2.22
 ```
