@@ -152,47 +152,47 @@ We added the commands `MPI_Init` and `MPI_Finalize`, and put three different sta
 
 <u>**Before 'MPI_Init()'**</u>
 
-*Output:*  
-<blockquote>
-  Before the 'init': Hello, World! <br>
-  Before the 'init': Hello, World! <br>
-  Before the 'init': Hello, World! <br>
+- Output:
+```
   Before the 'init': Hello, World!
-</blockquote>
+  Before the 'init': Hello, World!
+  Before the 'init': Hello, World!
+  Before the 'init': Hello, World!
+```
 
-*Explanation:*   
+- Explanation: 
   Before executing `MPI_Init`, the four processors are running independently. Therefore, the print code  (`cout`) is executed independently by each processor once.
 
 <u>**Between 'MPI_Init()' and 'MPI_Finalize()'**</u>
 
-*Output:*
+- Output:
 
-<blockquote>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 2. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 0. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 1. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
+```
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 2. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 0. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 1. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
   Rank: 3. Size: 4
-</blockquote>
+```
 
-*Explanation:*  
+- Explanation:
   Once we initialize MPI, each processor has its own rank for identification(i.e. task ID). Although each processor executes the print code once again, their operations are no longer independent of each other, instead, they can communicate with each other and cooperate in parallel computation.
 
 <u>**After 'MPI_Finalize()'**</u>  
 
-*Output:*
+- Output:
 
-<blockquote>
-  After the 'finalize': Hello, World!  <br>
-  After the 'finalize': Hello, World!  <br>
-  After the 'finalize': Hello, World!  <br>
+```
   After the 'finalize': Hello, World!
-</blockquote>
+  After the 'finalize': Hello, World!
+  After the 'finalize': Hello, World!
+  After the 'finalize': Hello, World!
+```
 
-*Explanation:*  
+- Explanation:
   Once we terminate the MPI execution environment using `MPI_Finalize()`, the four processors return to an independent state. Therefore, the print code is executed once again by each processor independently.  
 <br>
   
@@ -203,42 +203,42 @@ Excercise 2.3, 2.4, 2.5 from Parallel Programming Book.
 
 Rewrite `hello.cpp` as `hello_for_E23.cpp` (already uploaded) and run it on amd20 using 2 nodes, the output results are as follows. We can use `MPI_Get_processor_name` to see that the program ran on two nodes, `lac-215` and `lac-216`, respectively.
 
-<blockquote>
+```
 This job is running on lac-215 on Tue Feb  6 22:37:16 EST 2024  <br>
-Processor name: lac-215  <br>
-Processor name: lac-216  <br>
-Hello, World!  <br>
-Rank: 0. Size: 2  <br>
-Hello, World!  <br>
+Processor name: lac-215
+Processor name: lac-216
+Hello, World!
+Rank: 0. Size: 2
+Hello, World!
 Rank: 1. Size: 2
-</blockquote>
+```
 
 #### Exercise 2.4 Write a program where each process prints out a message reporting its number, and how many processes there are. Write a second version of this program, where each process opens a unique file and writes to it. On some clusters this may not be advisable if you have large numbers of processors, since it can overload the file system.
 
 The `hello_mpi.cpp` program includes the functionality to output the rank and size. I used 4 processors, and part of the output results are as follows. We can see that the 4 processors independently output their respective results and their corresponding ranks in sequence.
 
-<blockquote>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 2. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 0. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 1. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
+```
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 2. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 0. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 1. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
   Rank: 3. Size: 4
-</blockquote>
+```
 
 The second version of the code is named `hello_for_E24.cpp`, and I ran the program using 2 processors. Eventually, 2 files were created with the following contents:
 
 - rank_0.txt
-<blockquote>
+```
 Hello, World. Rank: 0. Size: 2
-</blockquote>
+```
 
 - rank_1.txt
-<blockquote>
+```
 Hello, World. Rank: 1. Size: 2
-</blockquote>
+```
 
 <br>
   
@@ -246,10 +246,10 @@ Hello, World. Rank: 1. Size: 2
 
 Based on the previous code, I added the conditional statement `if (rank == 0)` to complete the new code `hello_for_E25.cpp`, which meets the requirements. I used 4 processors, and the output results are as follows:
 
-<blockquote>
-Rank: 0  <br>
-Total number of processes: 4  <br>
-</blockquote>  
+```
+Rank: 0
+Total number of processes: 4
+``` 
 
 
 <br>
