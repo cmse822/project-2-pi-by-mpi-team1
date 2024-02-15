@@ -41,6 +41,42 @@ for (i = 0; i < N; i++)
 ### Exercise 2.19 
 Using a chunksize of 1 leads to poor performance primarily due to false sharing. This occurs because threads frequently update adjacent memory locations (elements in the array `a[i]`), which are likely to be on the same cache line (typically 64 bytes). When multiple threads update different variables on the same cache line, it causes the cache line to be invalidated and transferred among the cores, leading to significant performance penalties. A better chunksize would be larger, potentially aligned with the size of a cache line or sufficiently large to minimize the overhead of thread management and reduce the risk of false sharing. Not specifying a chunksize and letting OpenMP manage the distribution can also be effective, as OpenMP might balance the workload across threads more efficiently.
 
+### Exercise 2.21
+```
+MPI_Init(&argc, &argv);
+
+int myTaskID, nTasks;
+MPI_Comm_rank(MPI_COMM_WORLD, &myTaskID);
+MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
+
+double bfromleft, bfromright; 
+int leftproc = myTaskID - 1;
+int rightproc = myTaskID + 1;
+
+// Boundary condition handling
+if (myTaskID == 0) leftproc = MPI_PROC_NULL;
+if (myTaskID == nTasks - 1) rightproc = MPI_PROC_NULL;
+
+MPI_Request sendreqs[2], recvreqs[2];
+// Send to left and receive from right
+if (leftproc != MPI_PROC_NULL) MPI_Irecv(&bfromleft, 1, MPI_DOUBLE, leftproc, 0, MPI_COMM_WORLD, &recvreqs[0]);
+if (rightproc != MPI_PROC_NULL) MPI_Isend(&b[LocalProblemSize-1], 1, MPI_DOUBLE, rightproc, 0, MPI_COMM_WORLD, &sendreqs[0]);
+// Send to right and receive from left
+if (rightproc != MPI_PROC_NULL) MPI_Irecv(&bfromright, 1, MPI_DOUBLE, rightproc, 0, MPI_COMM_WORLD, &recvreqs[1]);
+if (leftproc != MPI_PROC_NULL) MPI_Isend(&b[0], 1, MPI_DOUBLE, leftproc, 0, MPI_COMM_WORLD, &sendreqs[1]);
+
+// Wait for all non-blocking operations to complete before proceeding with computation
+if (leftproc != MPI_PROC_NULL) MPI_Wait(&recvreqs[0], MPI_STATUS_IGNORE);
+if (rightproc != MPI_PROC_NULL) MPI_Wait(&sendreqs[0], MPI_STATUS_IGNORE);
+if (rightproc != MPI_PROC_NULL) MPI_Wait(&recvreqs[1], MPI_STATUS_IGNORE);
+if (leftproc != MPI_PROC_NULL) MPI_Wait(&sendreqs[1], MPI_STATUS_IGNORE);
+
+// Computation part using bfromleft and bfromright
+
+MPI_Finalize();
+```
+
+
 ### Exercise 2.22
 ```
 int rank, size;
@@ -48,21 +84,19 @@ MPI_Init(&argc, &argv);
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-double send_buf = x[rank]; // Prepare the send buffer with the current process's x value (assuming x is already initialized)
-double recv_buf; // Receive buffer for x_{i-1} or x_{n-1} for rank 0
+double send_buf = x[rank]; 
+double recv_buf;
 
 int prev_rank = (rank == 0) ? size - 1 : rank - 1;
 int next_rank = (rank + 1) % size;
 
-MPI_Request send_request, recv_request; // Start non-blocking receive from the previous process
-MPI_Irecv(&recv_buf, 1, MPI_DOUBLE, prev_rank, 0, MPI_COMM_WORLD, &recv_request); // Start non-blocking send to the next process
+MPI_Request send_request, recv_request; 
+MPI_Irecv(&recv_buf, 1, MPI_DOUBLE, prev_rank, 0, MPI_COMM_WORLD, &recv_request);
 MPI_Isend(&send_buf, 1, MPI_DOUBLE, next_rank, 0, MPI_COMM_WORLD, &send_request);
 
-// Ensure the receive has completed before updating y (assuming x is already initialized)
 MPI_Wait(&recv_request, MPI_STATUS_IGNORE);
-y[rank] += recv_buf; // Update y_i with received value
+y[rank] += recv_buf; 
 
-// Wait for the send to complete before proceeding 
 MPI_Wait(&send_request, MPI_STATUS_IGNORE);
 
 MPI_Finalize();
