@@ -154,9 +154,9 @@ We added the commands `MPI_Init` and `MPI_Finalize`, and put three different sta
 
 - Output:
 ```
-  Before the 'init': Hello, World! <br>
-  Before the 'init': Hello, World! <br>
-  Before the 'init': Hello, World! <br>
+  Before the 'init': Hello, World!
+  Before the 'init': Hello, World!
+  Before the 'init': Hello, World!
   Before the 'init': Hello, World!
 ```
 
@@ -168,13 +168,13 @@ We added the commands `MPI_Init` and `MPI_Finalize`, and put three different sta
 - Output:
 
 ```
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 2. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 0. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 1. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 2. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 0. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 1. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
   Rank: 3. Size: 4
 ```
 
@@ -186,9 +186,9 @@ We added the commands `MPI_Init` and `MPI_Finalize`, and put three different sta
 - Output:
 
 ```
-  After the 'finalize': Hello, World!  <br>
-  After the 'finalize': Hello, World!  <br>
-  After the 'finalize': Hello, World!  <br>
+  After the 'finalize': Hello, World!
+  After the 'finalize': Hello, World!
+  After the 'finalize': Hello, World!
   After the 'finalize': Hello, World!
 ```
 
@@ -205,11 +205,11 @@ Rewrite `hello.cpp` as `hello_for_E23.cpp` (already uploaded) and run it on amd2
 
 ```
 This job is running on lac-215 on Tue Feb  6 22:37:16 EST 2024  <br>
-Processor name: lac-215  <br>
-Processor name: lac-216  <br>
-Hello, World!  <br>
-Rank: 0. Size: 2  <br>
-Hello, World!  <br>
+Processor name: lac-215
+Processor name: lac-216
+Hello, World!
+Rank: 0. Size: 2
+Hello, World!
 Rank: 1. Size: 2
 ```
 
@@ -218,13 +218,13 @@ Rank: 1. Size: 2
 The `hello_mpi.cpp` program includes the functionality to output the rank and size. I used 4 processors, and part of the output results are as follows. We can see that the 4 processors independently output their respective results and their corresponding ranks in sequence.
 
 ```
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 2. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 0. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
-  Rank: 1. Size: 4 <br>
-  Between the 'init' and 'finalize': Hello, World! <br>
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 2. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 0. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
+  Rank: 1. Size: 4
+  Between the 'init' and 'finalize': Hello, World!
   Rank: 3. Size: 4
 ```
 
@@ -247,8 +247,8 @@ Hello, World. Rank: 1. Size: 2
 Based on the previous code, I added the conditional statement `if (rank == 0)` to complete the new code `hello_for_E25.cpp`, which meets the requirements. I used 4 processors, and the output results are as follows:
 
 ```
-Rank: 0  <br>
-Total number of processes: 4  <br>
+Rank: 0
+Total number of processes: 4
 ``` 
 
 
