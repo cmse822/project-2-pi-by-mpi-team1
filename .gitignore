@@ -1,8 +1,7 @@
+.ipynb_checkpoints
 pi
 mpi_hello
 *.o
-*.sb
-*.slurm
 *.out
 *.err
-.DS_Store
+*/.DS_Store

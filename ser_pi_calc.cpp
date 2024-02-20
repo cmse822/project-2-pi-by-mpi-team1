@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	receive_pi = receive_pi / (double)tasks;
 
 	if (rank == 0) {
-		printf("the final pi value is: %f\n", receive_pi);	
+		printf("%f\n", receive_pi);	
 	}
 
 	MPI_Finalize();
