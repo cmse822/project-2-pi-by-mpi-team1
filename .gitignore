@@ -5,3 +5,4 @@ mpi_hello
 *.slurm
 *.out
 *.err
+.DS_Store
