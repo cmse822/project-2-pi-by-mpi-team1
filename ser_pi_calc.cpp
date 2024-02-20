@@ -15,7 +15,7 @@
 void srandom (unsigned seed);  
 double dboard (int darts);
 
-#define DARTS 10000   	/* number of throws at dartboard */
+//#define DARTS 10000   /* number of throws at dartboard. This variable is not used in the whole program, can be ignored. */
 #define ROUNDS 100    	/* number of times "darts" is iterated */
 
 int main(int argc, char *argv[])
@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
 	   /* Perform pi calculation on serial processor */
 	   pi = dboard(darts_per_round);
 	   avepi = ((avepi * i) + pi)/(i + 1); 
-	   //printf("   After %3d throws, average value of pi = %10.8f\n", (DARTS * (i + 1)),avepi);
 	}    
 	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -89,7 +88,7 @@ double dboard(int darts)
       exit(1);
       }
    /* 2 bit shifted to MAX_RAND later used to scale random number between 0 and 1 */
-   cconst = 2 << (31 - 1);
+   cconst = 2 << (31 - 1); //By shifting 2 to the left by 30 positions, you effectively multiply 2 by 2^30, which equals 2^31.
    score = 0;
 
 /***********************************************************************
@@ -103,6 +102,9 @@ double dboard(int darts)
 
    for (n = 1; n <= darts; n++) {
       /* generate random numbers for x and y coordinates */
+	  /* The random() function returns a pseudo-random integer. 
+   		By dividing this integer by cconst, scale it down to a float between 0 and 1 because cconst is a large integer, 
+   		specifically 2^31, which is the maximum positive value for a 32-bit signed integer.*/
       r = (double)random()/cconst;
       x_coord = (2.0 * r) - 1.0;
       r = (double)random()/cconst;
