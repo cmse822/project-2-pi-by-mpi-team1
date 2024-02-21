@@ -1,0 +1,7 @@
+.ipynb_checkpoints
+pi
+mpi_hello
+*.o
+*.out
+*.err
+*/.DS_Store
