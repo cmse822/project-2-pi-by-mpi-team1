@@ -99,11 +99,11 @@ MPI_Wait(&send_request, MPI_STATUS_IGNORE);
 
 MPI_Finalize();
 ```
-#### Disadvantage of Non-blocking over Blocking 
+**Disadvantage of Non-blocking over Blocking**  
 The main disadvantage in this context is the increased complexity of the code. With non-blocking communication, we must explicitly manage the timing of communications and computations to ensure that data dependencies are respected without leading to deadlocks or race conditions. This complexity includes managing communication handles and ensuring that MPI_Wait (or other synchronization operations) is called at the correct times to guarantee that data has been properly sent and received before it is used. Additionally, non-blocking communication requires careful consideration of the workload and communication patterns to achieve the overlapping communication overlap effectively. If not properly managed the program could spend time waiting for communications to complete.
 
-### Exercise 2.23
-#### Purely Distributed Model
+#### Exercise 2.23
+**Purely Distributed Model**  
 In a purely distributed model with MPI processes on each core, communication between nodes is handled through explicit message passing. If two MPI processes on one node need to send messages to two processes on another node, there would be four individual messages. 
 Let's assume...
 - Latency per message is $L$,
@@ -112,30 +112,30 @@ Let's assume...
 
 Then the time to send a message would be $$T_{message} = L + \frac{S}{B}$$, which for four messages, the total cost would be $$T_{total} = 4 \times (L + \frac{S}{B})$$
 
-#### Hybrid Model
+**Hybrid Model**  
 In the hybrid model, where OpenMP is used for intra-node communication and MPI for inter-node, messages that are sent from one node to processes on another node can be bundled together, which can reduce the number of messages to one bundled message instead of four, assuming an optimal scenario where all data can be bundled into a single message of size $4S$. In this case, the time to send this bundled message would be $$T_{total, hybrid} = L + \frac{4S}{B}$$
 
-#### Cost Savings Analysis
+**Cost Savings Analysis**  
 The difference in total time between the purely distributed and hybrid models is:
 $$T_{savings} = T_{total, distributed} - T_{total, hybrid}$$
 $$T_{savings} = 4L + \frac{4S}{B} - (L + \frac{4S}{B})$$
 $$T_{savings} = 3L$$
 
 ### Exercise 2.27
-#### Extreme Cases
+**Extreme Cases**
 1. **Computation Time is Zero**: In this case, the entire runtime is dominated by communication. Overlapping cannot provide any benefit because there's no computation to overlap with communication. The potential gain from overlapping in this scenario is zero.
 
 2. **Communication Time is Zero**: Here, the runtime is solely determined by computation. Since communication doesn't contribute to the runtime, overlapping is irrelevant. The gain from overlapping is also zero because there's no communication time to hide.
 
-#### General Case
+**General Case**  
 The potential gain from overlapping depends on the relative amounts of time spent on communication and computation. Now, given...
 - $T_{comp}$ as the time taken for computation,
 - $T_{comm}$ as the time taken for communication.
 
-#### Without Overlapping
+**Without Overlapping**  
 The total time $T_{total}$ will be $$T_{total} = T_{comp} + T_{comm}$$
 
-#### With Overlapping
+**With Overlapping**  
 In this case, the total time $T'_{total}$ is the maximum of the two times $$T'_{total} = \max(T_{comp}, T_{comm})$$
 
 The potential gain from overlapping in this case is $$\text{Gain} = T_{total} - T'_{total}$$
@@ -252,27 +252,34 @@ Based on the previous code, I added the conditional statement `if (rank == 0)` t
 Rank: 0
 Total number of processes: 4
 ``` 
-
-
 <br>
   
 ## Part 4: Eat Some Pi
 #### Q1 
-Extend the `ser_pi_calc` program file using collective MPI routines to compute pi in parallel using the method described above.   
+Extend the ser_pi_calc.cpp program file using collective MPI routines to compute pi in parallel using the method described above.   
 -New program file (with the same name) can be found in the Github repository.
 #### Q2 
 For the first iteration, perform the same number of "rounds" on each MPI rank. Measure the total runtime using `MPI_WTIME()`. Vary the number of ranks used from 1 to 4. How does the total runtime change?  
--The total runtime did not change.
+
+-We ran 100 darts per node, with varying numbers of nodes. We observed that the time does not change. 
+| num of nodes | runtime |
+| -----        | ------- |
+| 1            | 0.10    |
+| 2            | 0.08    |
+| 3            | 0.13    |
+| 4            | 0.90    |
+
+
 
 #### Q3 
 Divide the number of "rounds" up amongst the number of ranks using the appropriate MPI routines to decide how to distribute the work. Again, run the program on 1 to 4 ranks. How does the runtime vary now?  
--The total runtime decreased.
+-The total runtime decreased. See results below.
 
 #### Q4 
-Change the number of "darts" and ranks. Use your MPI program to compute `pi` using total numbers of "darts" of 1E3, 1E6, and 1E9\. For each dart count, run your code on HPCC with processor counts of 1, 2, 4, 8, 16, 32, and 64\. Keep track of the resulting value of `pi` and the runtimes. Use non-interactive jobs and modify the `submitjob.sb` script as necessary. 
+Change the number of "darts" and ranks. Use your MPI program to compute Pi using total numbers of "darts" of 1E3, 1E6, and 1E9. For each dart count, run your code on HPCC with processor counts of 1, 2, 4, 8, 16, 32, and 64. Keep track of the resulting value of Pi and the runtimes. Use non-interactive jobs and modify the submitjob.sb script as necessary. 
 
 #### Q5 
-For each processor count, plot the resulting errors in your computed values of `pi` compared to the true value as functions of the number of darts used to compute it. Use log-log scaling on this plot. What is the rate of convergence of your algorithm for computing `pi`? Does this value make sense? Does the error or rate of convergence to the correct answer vary with processor count? Should it?   
+For each processor count, plot the resulting errors in your computed values of Pi compared to the true value as functions of the number of darts used to compute it. Use log-log scaling on this plot. What is the rate of convergence of your algorithm for computing Pi? Does this value make sense? Does the error or rate of convergence to the correct answer vary with processor count? Should it?   
 -See comments below.
 
 #### Q6 
@@ -282,17 +289,17 @@ For each dart count, make a plot of runtime versus processor count. Each line re
 #### Q7 
 Try running your code on different node types on HPCC with varied core counts. In particular, try to ensure that your runs utilize multiple nodes so that the communication network is used. Do you see a change in the communication cost when the job is run on more than one node?  
 
-*(The code of plotting could be found at '/results/runtime_plot.ipynb'
+*(The code of plotting could be found in '/results/runtime_plot.ipynb'
 )*
 
 ![time_nodes](/results/time_scaling.png "time_scaling")
 #### **Comments**
 - We observed interesting patterns from the plot.  
-  Perform the same number of 'rounds' on each rank, when the number of darts is small ($10^3, 10^6$), as the number of nodes increases, the total runtime slightly increases; when the number of darts is larger ($10^9$), as the number of nodes increases, the total runtime obviously decreases.  
+  We perform the same number of 'rounds' on each ran. When the number of darts is small ($10^3, 10^6$), as the number of nodes increases, the total runtime slightly increases. When the number of darts is larger ($10^9$), as the number of nodes increases, the total runtime decreases.  
      
-- This observed behavior is influenced by a balance between **computational workload** and **parallel overhead among the nodes**. In the context of parallel computing, "overhead" refers to the extra work and time required to manage the parallel processes. It includes the time spent on starting up and shutting down the parallel environment, communicating between nodes, synchronizing processes, and any additional operations that are necessary only because the task is being run in parallel rather than sequentially.  
+- This observed behavior is influenced by a balance between **computational workload** and **communication overhead among the nodes**. In the context of parallel computing, "overhead" refers to the extra work and time required to manage the parallel processes. It includes the time spent on starting up and shutting down the parallel environment, communicating between nodes, synchronizing processes, and any additional operations that are necessary only because the task is being run in parallel rather than sequentially.  
 
-- For a small number of darts, the workload done by each node is quite small, and the overhead of initializing MPI environment, distributing workload among nodes, synchronization(mpi_barrier) and communication(mpi_reduce) can dominate the actual run time. Each node spends more time waiting for synchronization and communication than doing the actual computation. Therefore, there is less workload than overhead, there is not enough computational workload to benefit from the parallel structure, leading to the patterns we observed when num_of_nodes are 10^3, 10^6: the total run time slightly increases as number of nodes increases.  
+- For a small number of darts, the workload done by each node is quite small, and the overhead of initializing MPI environment, distributing workload among nodes, synchronization(`mpi_barrier`) and communication(`mpi_reduce`) can dominate the actual run time. Each node spends more time waiting for synchronization and communication than doing the actual computation. Therefore, there is less workload than overhead, there is not enough computational workload to benefit from the parallel structure, leading to the patterns we observed when number of nodes are $10^3$, $10^6$: the total run time slightly increases as number of nodes increases.  
 
 - For a large number of darts, the workload done by each node is substantial enough so that the time for actual computation is significantly comparable to the overhead time. To be more specific, each node can perform a significant amount of actual computation before need to synchronize or communicate with other nodes. In this case, when the total workload is fixed, as the parallel resources(num_of_nodes) increases, the total run time decreases, which showcases the benefits of parallel computing.
 
@@ -302,16 +309,16 @@ Try running your code on different node types on HPCC with varied core counts. I
 ![error_nundarts](/results/error_scaling.png "error_scaling")
 
 #### **Comments**
-- We converted *num_of_darts* and *error* into log scale and then computed the slope of the relationship between num_of_darts and the error of estimated Pi value.  
+- We converted *num_of_darts* and *error* into log scale and then computed the slope of the relationship between num_of_darts and the error of estimated Pi value.
 
 - Slope interpretation  
 1) Negativity:   
-The negative slope of the line shows that as the number of darts increases, the error decreases.  
+The negative slope of the line shows that as the number of darts increases, the error decreases with a power law relationship. 
   
 2) Slope value:   
-In an ideal Monte Carlo simulation for estimating Pi, the error should scale with $ \frac{1}{\sqrt{n}}$ where n is num_of_darts, due to *the law of large numbers theory*. This is because the standard deviation of the sample mean in Monte Carlo simulation decreases with $\frac{1}{\sqrt{n}}$ where n is the sample size. In the log-log scale, this relationship would be expected to have a slope of $ -\frac{1}{2}$. In the plot, this ideal $ -\frac{1}{2}$ slope line is shown in pink named 'ideal'.
+In an ideal Monte Carlo simulation for estimating Pi, the error should scale with $ \frac{1}{\sqrt{n}}$ where n is num_of_darts, due to *the law of large numbers theory*. This means that, when $n$ is asympotically large, the standard deviation of the sample mean in Monte Carlo simulation decreases with $\frac{1}{\sqrt{n}}$ where n is the sample size. In the log-log scale, this relationship would be expected to have a slope of $ -\frac{1}{2}$. In the plot, this ideal $ -\frac{1}{2}$ slope line is shown in pink named 'ideal'.
 
-3) By comparing the slope of lines that drawn from our empirical results with the ideal slope of $ -\frac{1}{2}$, we can assess how well the simulation performs. The closer the empirical slopes are to $ -\frac{1}{2}$, the better the simulation is bahaving as theoretically expected. Our empirical results show that our mean_slope = -.04555 and std_slope = 0.0246, which implies that our simulation of estimating Pi behaves as it is theoretically expected :)
+3) By comparing the slope of lines that drawn from our empirical results with the ideal slope of $ -\frac{1}{2}$, we can assess how well the simulation performs. The closer the empirical slopes are to $ -\frac{1}{2}$, the better the simulation is bahaving as theoretically expected. Our empirical results show that our mean slope is -0.4555. We recover a standard deviation of 0.0246 in this slope by taking the standard deviation the slopes of linear fits of triplets of points from the dataset. The power law exponent is thus $-0.455 \pm 0.0246$. This implies that our simulation of estimating Pi behaves as it is theoretically expected to reasonable agreement. 
 
 
 
